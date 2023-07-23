@@ -6,6 +6,7 @@ import com.microservices.productservice.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -13,12 +14,14 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    //Implement Service
 
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
+    //Constructor
 
-    @PostMapping
+    @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public void createProduct(@RequestBody ProductRequest productRequest){
         productService.createProduct(productRequest);
@@ -30,6 +33,18 @@ public class ProductController {
     public List<ProductResponse> getAllProducts(){
         return productService.getAllProducts();
     }
-    //Get Product
+
+    @DeleteMapping("/delete")
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteProduct(@RequestParam("id") String id){
+
+        boolean isDeleted = productService.deleteProduct(id);
+
+        if (isDeleted) {
+            return "Ürün başarıyla silindi.";
+        } else {
+            return "İlgili ID'ye sahip ürün bulunamadı.";
+        }
+    }
 
 }
