@@ -14,19 +14,16 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    //Implement Service
 
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
-    //Constructor
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public void createProduct(@RequestBody ProductRequest productRequest){
         productService.createProduct(productRequest);
     }
-    //Created Product
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

@@ -18,13 +18,14 @@ import java.util.UUID;
 @Transactional
 public class OrderService {
 
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
     private final OrderRepository orderRepository;
 
-    public OrderService(WebClient webClient, OrderRepository orderRepository) {
-        this.webClient = webClient;
+    public OrderService(WebClient.Builder webClientBuilder, OrderRepository orderRepository) {
+        this.webClientBuilder = webClientBuilder;
         this.orderRepository = orderRepository;
     }
+
 
     public void placeOrder(OrderRequest orderRequest){
         Order order = new Order();
@@ -42,8 +43,8 @@ public class OrderService {
                 .toList();
 
         //Should call inventory service and place order if product is in stock
-        InventoryResponse[] inventoryResponseArray = webClient.get()
-                .uri("http://localhost:8082/api/inventory",
+        InventoryResponse[] inventoryResponseArray = webClientBuilder.build().get()
+                .uri("http://inventory-service/api/inventory",
                         uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
                 .retrieve()
                 .bodyToMono(InventoryResponse[].class)
